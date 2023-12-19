@@ -18,6 +18,7 @@ public class XlsxUtils {
 
 	public static CellValue getCellValue(Cell cell) {
 		Object cellValue;
+		if (cell == null) return new CellValue(null);
 		int cellType = cell.getCellType();
 		if (cellType == Cell.CELL_TYPE_FORMULA) {
 			cellType = cell.getCachedFormulaResultType();
@@ -33,11 +34,7 @@ public class XlsxUtils {
 				.trim();
 			break;
 		case Cell.CELL_TYPE_NUMERIC:
-			if (DateUtil.isCellDateFormatted(cell)) {
-                cellValue = cell.getDateCellValue();
-            } else {
-                cellValue = cell.getNumericCellValue();
-            }
+            cellValue = Double.valueOf(cell.getNumericCellValue()).intValue();
 			break;
 		case Cell.CELL_TYPE_ERROR:
 			cellValue = cell.getErrorCellValue();
