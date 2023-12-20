@@ -9,6 +9,8 @@ public class PPPartGen extends CommonGen {
 		// resolve class name and hierarchy based on sentence number
 		List<Map<String, Object>> headerProperties = getOrderedProperties(structure, sentenceNumber);
 		List<String> variableNames = getUserDefinedVariableNames(headerProperties);
+		variableNames.remove("code");
+		variableNames.remove("serialNumberIn12M");
 
 		StringBuilder code = new StringBuilder()
 			.append(declarePackage(ppFileExtension))

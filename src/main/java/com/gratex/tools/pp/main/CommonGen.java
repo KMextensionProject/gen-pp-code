@@ -14,7 +14,7 @@ public class CommonGen {
 
 	protected static String declareClassWithParentImport(String prefix, String className, String extendsFrom) {
 		return new StringBuilder("import com.gratex.tools.pp.core.").append(extendsFrom).append(";\n\n")
-			.append("public class ").append(prefix).append(className).append(" extends ").append(extendsFrom).append(" {\n\n")
+			.append("public class ").append(prefix).append(className).append(" extends ").append(extendsFrom).append("FileParser".equals(extendsFrom) ? "<" + prefix + "Parser>" : "").append(" {\n\n")
 			.toString();
 	}
 
@@ -46,9 +46,6 @@ public class CommonGen {
 		List<String> variables = properties.stream()
 			.map(e -> (String) e.get("nazovPremennej"))
 			.collect(toList());
-
-		variables.remove("code");
-		variables.remove("serialNumberIn12M");
 		return variables;
 	}
 

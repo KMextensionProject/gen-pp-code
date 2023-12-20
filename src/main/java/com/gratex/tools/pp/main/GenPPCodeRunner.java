@@ -1,8 +1,8 @@
 package com.gratex.tools.pp.main;
 
-import static com.gratex.tools.pp.main.PPPartGen.generatePPModelClass;
 import static com.gratex.tools.pp.main.PPFileGen.generatePPFileClass;
 import static com.gratex.tools.pp.main.PPParserGen.generatePPParserClass;
+import static com.gratex.tools.pp.main.PPPartGen.generatePPModelClass;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public class GenPPCodeRunner {
 
 			// use these names to generate PPFile properties
 			String ppFileClass = generatePPFileClass(structure.getValue(), structure.getKey(), "File", "PPFile");
-			String ppParserClass = generatePPParserClass();
+			String ppParserClass = generatePPParserClass(structure.getValue(), structure.getKey());
 
 			System.out.println(ppFileClass);
 			System.out.println(ppParserClass);
