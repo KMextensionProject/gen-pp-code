@@ -1,56 +1,34 @@
 package com.gratex.tools.pp.main;
 
-import static com.gratex.tools.pp.main.XlsxUtils.getCellValue;
+import static com.gratex.tools.pp.main.PPPartGen.generatePPModelClass;
+import static com.gratex.tools.pp.main.PPFileGen.generatePPFileClass;
+import static com.gratex.tools.pp.main.PPParserGen.generatePPParserClass;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
 public class GenPPCodeRunner {
 
-	private static final String PP_STRUCTURE = "src/main/resources/pp_structure.xlsx";
+	public static void main(String[] args) throws Exception {
 
-	public static void main(String[] args) throws FileNotFoundException, IOException {
-		Workbook workbook = new XSSFWorkbook(new FileInputStream(PP_STRUCTURE));
-		int sheets = workbook.getNumberOfSheets();
+		for (Map.Entry<String, List<Map<String, Object>>> structure : StructureLoader.loadPPStructure().entrySet()) {
 
-		List<Map<String, Object>> structure = new ArrayList<>();
+			// key   = schema name as file extension and class file prefix
+			// value = PP structure and meta data
+			String headerClass = generatePPModelClass(structure.getValue(), structure.getKey(), 1, "Header", "PPHeader"); // uvodna veta
+			String recordClass = generatePPModelClass(structure.getValue(), structure.getKey(), 2, "Record", "PPPart"); // datova veta
+			String footerClass = generatePPModelClass(structure.getValue(), structure.getKey(), 3, "Footer", "PPPart"); // koncova veta
 
-		// lets loop through all the sheets
-		for (int sheetNum = 0; sheetNum < sheets; sheetNum++) {
-			Sheet sheet = workbook.getSheetAt(sheetNum);
-			String sourceFilePrefix = sheet.getSheetName();
-			System.out.println(sourceFilePrefix);
+			System.out.println(headerClass);
+			System.out.println(recordClass);
+			System.out.println(footerClass);
 
-			// load to some list once, with cammelCase names
-			Row titleRow = sheet.getRow(sheet.getFirstRowNum());
+			// use these names to generate PPFile properties
+			String ppFileClass = generatePPFileClass(structure.getValue(), structure.getKey(), "File", "PPFile");
+			String ppParserClass = generatePPParserClass();
 
-			// lets loop through all the rows
-			for (int rowNum = 1; rowNum <= sheet.getLastRowNum(); rowNum++) {
-				Row dataRow = sheet.getRow(rowNum);
-
-				Map<String, Object> data = new HashMap<>();
-				// lets loop through all the columns
-				for (int cellNum = 0; cellNum < 6; cellNum++) {
-					data.put(getCellValue(titleRow.getCell(cellNum)).asString(),
-							 getCellValue(dataRow.getCell(cellNum)).asString());
-				}
-
-				structure.add(data);
-
-			}
-
+			System.out.println(ppFileClass);
+			System.out.println(ppParserClass);
 		}
-		structure.forEach(System.out::println);
 	}
-	
 }
