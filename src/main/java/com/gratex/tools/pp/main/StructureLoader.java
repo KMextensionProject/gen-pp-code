@@ -22,7 +22,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import com.gratex.tools.pp.main.XlsxUtils.CellValue;
 
 public class StructureLoader {
-	private static final String PP_STRUCTURE = "src/main/resources/pp_structure.xlsx";
+	private static final String PP_STRUCTURE = System.getProperty("user.dir") + "/pp_structure.xlsx";
 
 	public static Map<String, List<Map<String, Object>>> loadPPStructure() throws FileNotFoundException, IOException {
 		Workbook workbook = new XSSFWorkbook(new FileInputStream(PP_STRUCTURE));
@@ -54,7 +54,6 @@ public class StructureLoader {
 			}
 			structures.put(sheet.getSheetName(), structure);
 		}
-		structures.forEach((a, b)-> System.out.println(a + "=" + b));
 		workbook.close();
 		return structures;
 	}

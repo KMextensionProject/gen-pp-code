@@ -71,7 +71,7 @@ public class PPFileGen extends CommonGen {
 	private static String declareGetBodyMethod(String typeName, String variableName) {
 		String adjustedVarName = Character.toUpperCase(variableName.charAt(0)) + variableName.substring(1);
 		return new StringBuilder()
-			.append("\tpublic List<").append(typeName).append(" get").append(adjustedVarName).append("() {\n")
+			.append("\tpublic List<").append(typeName).append("> get").append(adjustedVarName).append("() {\n")
 		    .append("\t\treturn nonNull(").append(variableName).append(") && !").append(variableName).append(".isEmpty()\n")
 		    .append("\t\t\t? new ArrayList<>(").append(variableName).append(")\n")
 		    .append("\t\t\t: emptyList();\n\t}\n\n")
@@ -105,9 +105,9 @@ public class PPFileGen extends CommonGen {
 				.append("\t\tfileContent.append(").append(getterCalls.remove(0)).append(")\n");
 
 			getterCalls.forEach(call -> appendHelperMethod.append("\t\t           .append(").append(call).append(")\n"));
-
+			appendHelperMethod.deleteCharAt(appendHelperMethod.length() - 1);
 			return appendHelperMethod
-				.append(sentence == 3 ? "" : "\t\t           .append(\"\\r\\n\");\n")
+				.append(sentence == 3 ? ";\n" : "\n\t\t           .append(\"\\r\\n\");\n")
 				.append("\t}\n\n")
 				.toString();
 		}
@@ -124,7 +124,7 @@ public class PPFileGen extends CommonGen {
 
 	private static String declareAppendHelperForBody(String prefix, List<Map<String, Object>> orderedStructure, String instanceVariableName) {
 		List<String> getterCalls = getGetterCalls("bodyLine", orderedStructure);
-		StringBuilder appendHelperMethod =  new StringBuilder("\tprivate void appendBody(StringBuilder fileContent) {\n")
+		StringBuilder appendHelperMethod =  new StringBuilder("\tprivate void appendBody(StringBuilder content) {\n")
 				.append("\t\tfor (").append(prefix).append("Record ").append("bodyLine : ").append(instanceVariableName).append(") {\n")
 				.append("\t\t\tcontent.append(").append(getterCalls.remove(0)).append(")\n");
 

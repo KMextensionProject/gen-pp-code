@@ -64,7 +64,7 @@ public class PPParserGen extends CommonGen {
 			.append("\t}\n\n");
 
 		StringBuilder parseBody = new StringBuilder()
-			.append("\tList<").append(ppBody).append("> parseBody(String line) {\n")
+			.append("\tList<").append(ppBody).append("> parseBody(List<String> lines) {\n")
 			.append("\t\treturn lines.stream()\n")
 			.append("\t\t.map(this::parseRecord)\n")
 			.append("\t\t.collect(toList());\n")
@@ -73,7 +73,7 @@ public class PPParserGen extends CommonGen {
 		StringBuilder parseRecord = new StringBuilder()
 			.append("\tprivate ").append(ppBody).append(" parseRecord(String line) {\n")
 			.append("\t\tCharSequenceIterator sequencer = new CharSequenceIterator(line);\n\n")
-			.append("\t\t").append(ppHeader).append(" bodyLine = new ").append(ppHeader).append("();\n");
+			.append("\t\t").append(ppBody).append(" bodyLine = new ").append(ppBody).append("();\n");
 
 		getOrderedProperties(structure, 2).forEach(bodyMeta -> parseRecord.append("\t\t").append(getSetter(bodyMeta, "bodyLine")).append(";\n"));
 		if ("PPE".equalsIgnoreCase(prefix)) {
